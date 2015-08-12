@@ -1,0 +1,3 @@
+set solib-search-path C:/lavoro/AndroidStudioProjects/HelloJni/app/src/main/obj/local/armeabi-v7a
+source C:/lavoro/android-ndk-r10e/prebuilt/common/gdb/common.setup
+directory C:/lavoro/android-ndk-r10e/platforms/android-3/arch-arm/usr/include C:/lavoro/AndroidStudioProjects/HelloJni/app/src/main/jni C:/lavoro/android-ndk-r10e/sources/cxx-stl/system
