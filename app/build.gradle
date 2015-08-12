@@ -6,17 +6,19 @@ android {
 
     defaultConfig {
         applicationId "com.example.hellojni"
-        minSdkVersion 19
-        targetSdkVersion 19
+        minSdkVersion 11
+        targetSdkVersion 11
 
         ndk {
             moduleName "hello-jni"
             ldLibs "log"
+
         }
 
         testApplicationId "com.example.hellojni.tests"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
+
 
     buildTypes {
         release {
@@ -24,4 +26,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+
 }
+
+
+
+

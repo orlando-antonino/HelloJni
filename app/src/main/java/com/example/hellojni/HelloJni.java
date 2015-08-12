@@ -19,7 +19,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 public class HelloJni extends Activity
@@ -30,29 +32,51 @@ public class HelloJni extends Activity
     {
         super.onCreate(savedInstanceState);
 
-        /* Create a TextView and set its content.
-         * the text is retrieved by calling a native
-         * function.
-         */
-        TextView  tv = new TextView(this);
-        //tv.setText( stringFromJNI() );
-        //tv.setText("ss");
+        setContentView(R.layout.activity_main);
+        TextView  goLangTV =(TextView) findViewById(R.id.goLangTV);
 
-        String aaa = getApplicationInfo().nativeLibraryDir + "/libhello-jni.so";
+        TextView  jniTV =(TextView) findViewById(R.id.jniTV);
+
+        jniTV.setText(stringFromJNI());
+
+
+        String execute = (getApplicationInfo().nativeLibraryDir) + "/libmyexecutable.so";
+
+
+
         try {
-            Process p = Runtime.getRuntime().exec("ls");
+            Process p = Runtime.getRuntime().exec(execute);
+
+            // Reads stdout.
+            // NOTE: You can write to stdin of the command using
+            //       process.getOutputStream().
+            BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(p.getInputStream()));
+            int read;
+            char[] buffer = new char[4096];
+            StringBuffer output = new StringBuffer();
+            while ((read = reader.read(buffer)) > 0) {
+                output.append(buffer, 0, read);
+            }
+            reader.close();
+
+// Waits for the command to finish.
+            p.waitFor();
+
+            goLangTV.setText(output.toString());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
-        setContentView(tv);
     }
 
     /* A native method that is implemented by the
      * 'hello-jni' native library, which is packaged
      * with this application.
      */
-    //public native String  stringFromJNI();
+   public native String  stringFromJNI();
 
     /* This is another native method declaration that is *not*
      * implemented by 'hello-jni'. This is simply to show that
@@ -64,7 +88,7 @@ public class HelloJni extends Activity
      * Trying to call this function will result in a
      * java.lang.UnsatisfiedLinkError exception !
      */
-    //public native String  unimplementedStringFromJNI();
+   // public native String  unimplementedStringFromJNI();
 
     /* this is used to load the 'hello-jni' library on application
      * startup. The library has already been unpacked into
@@ -72,6 +96,9 @@ public class HelloJni extends Activity
      * installation time by the package manager.
      */
     static {
+
         System.loadLibrary("hello-jni");
+
+
     }
 }
